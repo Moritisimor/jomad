@@ -10,7 +10,7 @@ class Lexer(sourceCode: String) {
     private fun current(): Char = charStream[index]
     private fun peek(): Char = charStream[index + 1]
     private fun advance(): Char = charStream[index++]
-    private fun isTerminator(): Boolean = listOf(' ', '\t', '\n', '(', ')').contains(charStream[index])
+    private fun isTerminator(): Boolean = listOf(' ', '\t', '\n', '(', ')', '"').contains(charStream[index])
 
     private fun countParens(tokens: List<Token>): Pair<Int, Int> {
         var left = 0

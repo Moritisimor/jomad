@@ -7,7 +7,7 @@ fun main() {
     val tokens = lexer.tokenize().fold(
         onSuccess = { tokens -> tokens },
         onFailure = {
-            println("Error while parsing tokens: $it")
+            println("Error while parsing tokens: ${it.message}")
             exitProcess(1)
         }
     )
