@@ -12,6 +12,18 @@ class Lexer(sourceCode: String) {
     private fun advance(): Char = charStream[index++]
     private fun isTerminator(): Boolean = listOf(' ', '\t', '\n', '(', ')').contains(charStream[index])
 
+    private fun countParens(tokens: List<Token>): Pair<Int, Int> {
+        var left = 0
+        var right = 0
+        tokens.forEach { token -> when (token) {
+            is Token.RightParenthesis -> right++
+            is Token.LeftParenthesis -> left++
+            else -> Unit
+        }}
+
+        return Pair(left, right)
+    }
+
     private fun scanNumLit(): Result<Double> {
         val builder = StringBuilder()
         while (!isTerminator()) {
@@ -115,6 +127,16 @@ class Lexer(sourceCode: String) {
                     .onFailure { exn -> return Result.failure(TokenizerException(exn.message)) }
             }
         }
+
+        val parenCount = countParens(tokens)
+        val left = parenCount.first
+        val right = parenCount.second
+
+        if (left > right)
+            return Result.failure(TokenizerException("One or more unclosed left parenthesises"))
+
+        if (right > left)
+            return Result.failure(TokenizerException("One or more superfluous right parenthesises"))
 
         return Result.success(tokens)
     }

@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.4.10"
+    id("com.gradleup.shadow") version "9.6.1"
 }
 
 group = "com.github.moritisimor"
@@ -15,6 +16,12 @@ dependencies {
 
 kotlin {
     jvmToolchain(25)
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
 }
 
 tasks.test {
