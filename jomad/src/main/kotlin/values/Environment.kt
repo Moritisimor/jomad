@@ -1,10 +1,15 @@
 package values
 
 import errors.EvaluationException
+import expressions.Expression
 
 class Environment {
     private var bindings = HashMap<String, Value>()
     private val parent: Environment? = null
+
+    fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) {
+        bindings[name] = Value.ValNativeFunction(callback)
+    }
 
     fun getBinding(name: String): Result<Value> = when (val v = bindings[name]) {
         is Value -> Result.success(v)
