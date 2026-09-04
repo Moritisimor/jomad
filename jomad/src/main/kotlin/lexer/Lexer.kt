@@ -27,13 +27,13 @@ class Lexer(sourceCode: String) {
     private fun scanNumLit(): Result<Double> {
         val builder = StringBuilder()
         while (!isTerminator()) {
+            builder.append(current())
             if (index == charStream.size - 1) {
                 return Result.failure(TokenizerException(
                     "Number literal was never ended (Got to \"$builder\")"
                 ))
             }
 
-            builder.append(current())
             advance()
         }
 

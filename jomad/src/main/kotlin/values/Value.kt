@@ -3,7 +3,10 @@ package values
 import expressions.Expression
 
 sealed interface Value {
-    data object ValUnit : Value
+    data object ValUnit : Value {
+        override fun toString(): String = "<UNIT>"
+    }
+
     data class ValString(val value: String) : Value {
         override fun toString(): String = value
     }
@@ -32,16 +35,22 @@ sealed interface Value {
         val parameters: List<String>,
         val captured: Environment,
         val body: Expression
-    ) : Value
+    ) : Value {
+        override fun toString(): String = "<LAMBDA>"
+    }
 
     data class ValNativeFunction(
         val callback: (List<Expression>, Environment) -> Result<Value>
-    ) : Value
+    ) : Value {
+        override fun toString(): String = "<NATIVE FUNCTION>"
+    }
 
     data class ValMacro(
         val parameters: List<String>,
         val body: List<Expression>
-    ) : Value
+    ) : Value {
+        override fun toString(): String = "<MACRO>"
+    }
 }
 
 fun newNative(callback: (List<Expression>, Environment) -> Result<Value>) = Value.ValNativeFunction(callback)

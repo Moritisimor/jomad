@@ -14,6 +14,7 @@ class Interpreter {
     constructor(empty: Boolean = false) {
         if (!empty) {
             prelude.registerArithmetics(globalEnvironment)
+            prelude.registerIO(globalEnvironment)
         }
     }
 
