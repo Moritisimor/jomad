@@ -4,11 +4,29 @@ import expressions.Expression
 
 sealed interface Value {
     data object ValUnit : Value
-    data class ValString(val value: String) : Value
-    data class ValNumber(val value: Double) : Value
-    data class ValBoolean(val value: Boolean) : Value
-    data class ValList(val value: List<Value>) : Value
-    data class ValRecord(val value: HashMap<String, Value>) : Value
+    data class ValString(val value: String) : Value {
+        override fun toString(): String = value
+    }
+
+    data class ValNumber(val value: Double) : Value {
+        override fun toString(): String =
+            if (value % 1 == 0.0)
+                value.toInt().toString()
+            else
+                value.toString()
+    }
+
+    data class ValBoolean(val value: Boolean) : Value {
+        override fun toString(): String = value.toString()
+    }
+
+    data class ValList(val value: List<Value>) : Value {
+        override fun toString(): String = value.toString()
+    }
+
+    data class ValRecord(val value: HashMap<String, Value>) : Value {
+        override fun toString(): String = value.toString()
+    }
 
     data class ValLambda(
         val parameters: List<String>,
@@ -25,3 +43,5 @@ sealed interface Value {
         val body: List<Expression>
     ) : Value
 }
+
+fun newNative(callback: (List<Expression>, Environment) -> Result<Value>) = Value.ValNativeFunction(callback)
