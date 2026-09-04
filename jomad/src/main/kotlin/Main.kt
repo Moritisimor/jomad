@@ -4,7 +4,7 @@ fun main() {
     val interpreter = Interpreter()
     while (true) {
         try {
-            print("Jomad REPL >> ")
+            print("Jomad λ ")
             val sourceCode = readln()
             interpreter.doString(sourceCode)
                 .onFailure { println("Error while evaluating: $it") }
