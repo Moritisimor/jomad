@@ -1,5 +1,6 @@
 package values
 
+import errors.TypeAssertionException
 import expressions.Expression
 
 sealed interface Value {
@@ -51,6 +52,44 @@ sealed interface Value {
     ) : Value {
         override fun toString(): String = "<MACRO>"
     }
-}
 
-fun newNative(callback: (List<Expression>, Environment) -> Result<Value>) = Value.ValNativeFunction(callback)
+    fun getString(): Result<String> = when (this) {
+        is ValString -> return Result.success(this.value)
+        else -> return Result.failure(TypeAssertionException("Value could not be coerced to a string"))
+    }
+
+    @Suppress("Unused")
+    fun getStringOrThrow(): String = this.getString().getOrThrow()
+
+    fun getNumber(): Result<Double> = when (this) {
+        is ValNumber -> Result.success(this.value)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a number"))
+    }
+
+    @Suppress("Unused")
+    fun getNumberOrThrow(): Double = getNumber().getOrThrow()
+
+    fun getBoolean(): Result<Boolean> = when (this) {
+        is ValBoolean -> Result.success(this.value)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a boolean"))
+    }
+
+    @Suppress("Unused")
+    fun getBooleanOrThrow(): Boolean = getBoolean().getOrThrow()
+
+    fun getList(): Result<List<Value>> = when (this) {
+        is ValList -> Result.success(this.value)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a list"))
+    }
+
+    @Suppress("Unused")
+    fun getListOrThrow(): List<Value> = getList().getOrThrow()
+
+    fun getRecord(): Result<HashMap<String, Value>> = when (this) {
+        is ValRecord -> Result.success(this.value)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a record"))
+    }
+
+    @Suppress("Unused")
+    fun getRecordOrThrow(): HashMap<String, Value> = getRecord().getOrThrow()
+}

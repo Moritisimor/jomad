@@ -13,6 +13,7 @@ class Interpreter {
     private val globalEnvironment = Environment()
     constructor(empty: Boolean = false) {
         if (!empty) {
+            prelude.registerConditionals(globalEnvironment)
             prelude.registerArithmetics(globalEnvironment)
             prelude.registerIO(globalEnvironment)
         }
