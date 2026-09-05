@@ -13,6 +13,8 @@ class Interpreter {
     private val globalEnvironment = Environment()
     constructor(empty: Boolean = false) {
         if (!empty) {
+            prelude.registerFunctionalFunctions(globalEnvironment)
+            prelude.registerVariableFunctions(globalEnvironment)
             prelude.registerConditionals(globalEnvironment)
             prelude.registerArithmetics(globalEnvironment)
             prelude.registerIO(globalEnvironment)
@@ -37,6 +39,7 @@ class Interpreter {
         return Result.success(lastValue)
     }
 
+    @Suppress("UNUSED")
     fun doStringOrThrow(sourceCode: String): Value = doString(sourceCode).fold(
         onSuccess = { it },
         onFailure = { throw it }
@@ -51,11 +54,13 @@ class Interpreter {
         }
     }
 
+    @Suppress("UNUSED")
     fun doFileOrThrow(path: String): Value = doFile(path).fold(
         onSuccess = { it },
         onFailure = { throw it }
     )
 
+    @Suppress("UNUSED")
     fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) {
         globalEnvironment.registerNative(name, callback)
     }
