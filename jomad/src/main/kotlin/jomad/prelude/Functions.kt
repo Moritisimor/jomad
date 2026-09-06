@@ -1,6 +1,6 @@
 package jomad.prelude
 
-import jomad.errors.EvaluationException
+import jomad.exceptions.EvaluationException
 import jomad.expressions.Expression
 import jomad.values.Environment
 import jomad.values.Value

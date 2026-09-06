@@ -1,7 +1,7 @@
 @file:JvmName("Values")
 package jomad.values
 
-import jomad.errors.TypeAssertionException
+import jomad.exceptions.TypeAssertionException
 import jomad.expressions.Expression
 
 fun newValue(v: Value): Result<Value> = Result.success(v)

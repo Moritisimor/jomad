@@ -1,7 +1,7 @@
 package jomad.values
 
-import jomad.errors.EvaluationException
-import jomad.errors.JomadException
+import jomad.exceptions.EvaluationException
+import jomad.exceptions.JomadException
 import jomad.expressions.Expression
 
 class Environment {

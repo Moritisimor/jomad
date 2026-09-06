@@ -1,7 +1,7 @@
 @file:JvmName("Exprs")
 package jomad.expressions
 
-import jomad.errors.EvaluationException
+import jomad.exceptions.EvaluationException
 
 @Suppress("Unused")
 fun newListLit(elems: List<Expression>) = Expression.ListLiteral(elems)

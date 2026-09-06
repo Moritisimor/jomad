@@ -6,21 +6,15 @@ import jomad.values.Environment
 import jomad.values.Value
 
 fun registerIO(environment: Environment) {
-    environment.registerNative(
-        "print",
-        fun(
-            args: List<Expression>,
-            env: Environment
-        ): Result<Value> {
-            for (arg in args) {
-                evaluate(arg, env)
-                    .onSuccess { print(it) }
-                    .onFailure { return Result.failure(it) }
-            }
-
-            return Result.success(Value.ValUnit)
+    environment.registerNative("print", fun(args: List<Expression>, env: Environment): Result<Value> {
+        for (arg in args) {
+            evaluate(arg, env)
+                .onSuccess { print(it) }
+                .onFailure { return Result.failure(it) }
         }
-    )
+
+        return Result.success(Value.ValUnit)
+    })
 
     environment.registerNative(
         "println",
@@ -39,23 +33,17 @@ fun registerIO(environment: Environment) {
         }
     )
 
-    environment.registerNative(
-        "readln",
-        fun(
-            args: List<Expression>,
-            env: Environment
-        ): Result<Value> {
-            if (args.isEmpty()) {
-                return Result.success(Value.ValString(readln()))
-            }
-
-            for (arg in args) {
-                evaluate(arg, env)
-                    .onSuccess { print(it) }
-                    .onFailure { return Result.failure(it) }
-            }
-
+    environment.registerNative("readln", fun(args: List<Expression>, env: Environment): Result<Value> {
+        if (args.isEmpty()) {
             return Result.success(Value.ValString(readln()))
         }
-    )
+
+        for (arg in args) {
+            evaluate(arg, env)
+                .onSuccess { print(it) }
+                .onFailure { return Result.failure(it) }
+        }
+
+        return Result.success(Value.ValString(readln()))
+    })
 }

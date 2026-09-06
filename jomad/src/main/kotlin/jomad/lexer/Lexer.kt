@@ -1,6 +1,6 @@
 package jomad.lexer
 
-import jomad.errors.TokenizerException
+import jomad.exceptions.TokenizerException
 
 class Lexer(sourceCode: String) {
     private val tokens = mutableListOf<Token>()

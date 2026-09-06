@@ -1,6 +1,7 @@
 package jomad.prelude
 
 import jomad.evaluation.evaluate
+import jomad.exceptions.EvaluationException
 import jomad.expressions.Expression
 import jomad.values.Environment
 import jomad.values.Value
@@ -8,7 +9,7 @@ import jomad.values.Value
 fun registerVariableFunctions(env: Environment) {
     env.registerNative("let", fun(args: List<Expression>, env: Environment): Result<Value> {
         if (args.size != 2)
-            return Result.failure(IllegalArgumentException("let expects 2 arguments"))
+            return Result.failure(EvaluationException("let expects 2 arguments"))
 
         val bindingName = args[0].getSymbol().fold(
             { it },
