@@ -1,4 +1,6 @@
-import interpreter.Interpreter
+package jomad
+
+import jomad.interpreter.Interpreter
 
 fun main() {
     val interpreter = Interpreter()

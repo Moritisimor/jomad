@@ -1,9 +1,9 @@
-package prelude
+package jomad.prelude
 
-import errors.EvaluationException
-import expressions.Expression
-import values.Environment
-import values.Value
+import jomad.errors.EvaluationException
+import jomad.expressions.Expression
+import jomad.values.Environment
+import jomad.values.Value
 
 fun registerFunctionalFunctions(env: Environment) {
     env.registerNative("letfun", fun(args: List<Expression>, env: Environment): Result<Value> {

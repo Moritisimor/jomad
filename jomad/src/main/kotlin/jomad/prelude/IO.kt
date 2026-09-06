@@ -1,9 +1,9 @@
-package prelude
+package jomad.prelude
 
-import evaluation.evaluate
-import expressions.Expression
-import values.Environment
-import values.Value
+import jomad.evaluation.evaluate
+import jomad.expressions.Expression
+import jomad.values.Environment
+import jomad.values.Value
 
 fun registerIO(environment: Environment) {
     environment.registerNative(

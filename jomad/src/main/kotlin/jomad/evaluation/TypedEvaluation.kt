@@ -1,8 +1,9 @@
-package evaluation
+@file:JvmName("TypedEval")
+package jomad.evaluation
 
-import expressions.Expression
-import values.Environment
-import values.Value
+import jomad.expressions.Expression
+import jomad.values.Environment
+import jomad.values.Value
 
 fun evaluateToString(value: Expression, env: Environment): Result<String> =
     evaluate(value, env).fold(

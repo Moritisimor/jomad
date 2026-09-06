@@ -1,9 +1,10 @@
-package evaluation
+@file:JvmName("Eval")
+package jomad.evaluation
 
-import errors.EvaluationException
-import expressions.Expression
-import values.Environment
-import values.Value
+import jomad.errors.EvaluationException
+import jomad.expressions.Expression
+import jomad.values.Environment
+import jomad.values.Value
 
 fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
     is Expression.BooleanLiteral -> Result.success(Value.ValBoolean(expr.value))

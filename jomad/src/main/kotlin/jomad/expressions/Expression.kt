@@ -1,6 +1,25 @@
-package expressions
+@file:JvmName("Exprs")
+package jomad.expressions
 
-import errors.EvaluationException
+import jomad.errors.EvaluationException
+
+@Suppress("Unused")
+fun newListLit(elems: List<Expression>) = Expression.ListLiteral(elems)
+
+@Suppress("Unused")
+fun newSymbol(name: String) = Expression.Symbol(name)
+
+@Suppress("Unused")
+fun newStringLit(elem: String) = Expression.StringLiteral(elem)
+
+@Suppress("Unused")
+fun newNumLit(elem: Double) = Expression.NumberLiteral(elem)
+
+@Suppress("Unused")
+fun newBooleanLit(elem: Boolean) = Expression.BooleanLiteral(elem)
+
+@Suppress("Unused")
+fun newUnitLit() = Expression.UnitLiteral
 
 sealed interface Expression {
     data class ListLiteral(val elems: List<Expression>) : Expression

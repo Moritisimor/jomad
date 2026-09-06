@@ -1,10 +1,10 @@
-package prelude
+package jomad.prelude
 
-import errors.EvaluationException
-import evaluation.evaluate
-import expressions.Expression
-import values.Environment
-import values.Value
+import jomad.errors.EvaluationException
+import jomad.evaluation.evaluate
+import jomad.expressions.Expression
+import jomad.values.Environment
+import jomad.values.Value
 
 fun registerTypeCheckingFunctions(env: Environment) {
     env.registerNative("isstr", fun(args: List<Expression>, env: Environment): Result<Value> {

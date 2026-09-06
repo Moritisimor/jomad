@@ -1,7 +1,7 @@
-package parser
+package jomad.parser
 
-import expressions.Expression
-import lexer.Token
+import jomad.expressions.Expression
+import jomad.lexer.Token
 
 class Parser(private val tokens: List<Token>) {
     private var index = 0

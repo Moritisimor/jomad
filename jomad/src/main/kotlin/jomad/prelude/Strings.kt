@@ -1,13 +1,13 @@
-package prelude
+package jomad.prelude
 
-import errors.EvaluationException
-import evaluation.evaluate
-import evaluation.evaluateToString
-import expressions.Expression
-import values.Environment
-import values.Value
-import values.newError
-import values.newValue
+import jomad.errors.EvaluationException
+import jomad.evaluation.evaluate
+import jomad.evaluation.evaluateToString
+import jomad.expressions.Expression
+import jomad.values.Environment
+import jomad.values.Value
+import jomad.values.newError
+import jomad.values.newValue
 
 fun registerStringFunctions(env: Environment) {
     env.registerNative("splitws", fun(args: List<Expression>, env: Environment): Result<Value> {

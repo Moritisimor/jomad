@@ -1,7 +1,7 @@
-package values
+package jomad.values
 
-import errors.EvaluationException
-import expressions.Expression
+import jomad.errors.EvaluationException
+import jomad.expressions.Expression
 
 class Environment {
     private var bindings = HashMap<String, Value>()
@@ -9,6 +9,17 @@ class Environment {
 
     fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) {
         bindings[name] = Value.ValNativeFunction(callback)
+    }
+
+    @Suppress("Unused")
+    fun registerNativeThrowing(name: String, callback: (List<Expression>, Environment) -> Value) {
+        bindings[name] = Value.ValNativeFunction { args, env ->
+            try {
+                Result.success(callback(args, env))
+            } catch (t: Throwable) {
+                Result.failure(t)
+            }
+        }
     }
 
     fun getBinding(name: String): Result<Value> = when (val v = bindings[name]) {

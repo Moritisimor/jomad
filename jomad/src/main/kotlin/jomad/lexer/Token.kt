@@ -1,4 +1,4 @@
-package lexer
+package jomad.lexer
 
 sealed interface Token {
     data class NumberLiteral(val value: Double) : Token

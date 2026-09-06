@@ -1,11 +1,12 @@
-package prelude
+package jomad.prelude
 
-import errors.EvaluationException
-import evaluation.evaluate
-import evaluation.*
-import expressions.Expression
-import values.Environment
-import values.Value
+import jomad.errors.EvaluationException
+import jomad.evaluation.evaluate
+import jomad.expressions.Expression
+import jomad.evaluation.evaluateToBoolean
+import jomad.evaluation.evaluateToNumber
+import jomad.values.Environment
+import jomad.values.Value
 
 fun registerConditionals(env: Environment) {
     env.registerNative("if", fun(args: List<Expression>, env: Environment): Result<Value> {

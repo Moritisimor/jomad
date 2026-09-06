@@ -1,11 +1,18 @@
-package interpreter
+package jomad.interpreter
 
-import evaluation.evaluate
-import expressions.Expression
-import lexer.Lexer
-import parser.Parser
-import values.Environment
-import values.Value
+import jomad.evaluation.evaluate
+import jomad.expressions.Expression
+import jomad.lexer.Lexer
+import jomad.parser.Parser
+import jomad.prelude.registerArithmetics
+import jomad.prelude.registerConditionals
+import jomad.prelude.registerFunctionalFunctions
+import jomad.prelude.registerIO
+import jomad.prelude.registerStringFunctions
+import jomad.prelude.registerTypeCheckingFunctions
+import jomad.prelude.registerVariableFunctions
+import jomad.values.Environment
+import jomad.values.Value
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -13,17 +20,16 @@ class Interpreter {
     private val globalEnvironment = Environment()
     constructor(empty: Boolean = false) {
         if (!empty) {
-            prelude.registerStringFunctions(globalEnvironment)
-            prelude.registerTypeCheckingFunctions(globalEnvironment)
-            prelude.registerFunctionalFunctions(globalEnvironment)
-            prelude.registerVariableFunctions(globalEnvironment)
-            prelude.registerConditionals(globalEnvironment)
-            prelude.registerArithmetics(globalEnvironment)
-            prelude.registerIO(globalEnvironment)
+            registerStringFunctions(globalEnvironment)
+            registerTypeCheckingFunctions(globalEnvironment)
+            registerFunctionalFunctions(globalEnvironment)
+            registerVariableFunctions(globalEnvironment)
+            registerConditionals(globalEnvironment)
+            registerArithmetics(globalEnvironment)
+            registerIO(globalEnvironment)
         }
     }
 
-    fun registerFunctions(func: (Environment) -> Unit) = func(globalEnvironment)
     fun doString(sourceCode: String): Result<Value> {
         val lexer = Lexer(sourceCode)
         val expressions = Parser(lexer.tokenize().fold(
@@ -64,7 +70,10 @@ class Interpreter {
     )
 
     @Suppress("UNUSED")
-    fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) {
+    fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) =
         globalEnvironment.registerNative(name, callback)
-    }
+
+    @Suppress("UNUSED")
+    fun registerNativeThrowing(name: String, callback: (List<Expression>, Environment) -> Value) =
+        globalEnvironment.registerNativeThrowing(name, callback)
 }
