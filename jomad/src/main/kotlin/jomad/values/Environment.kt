@@ -1,6 +1,7 @@
 package jomad.values
 
 import jomad.errors.EvaluationException
+import jomad.errors.JomadException
 import jomad.expressions.Expression
 
 class Environment {
@@ -16,7 +17,7 @@ class Environment {
         bindings[name] = Value.ValNativeFunction { args, env ->
             try {
                 Result.success(callback(args, env))
-            } catch (t: Throwable) {
+            } catch (t: JomadException) { // Don't catch anything else!
                 Result.failure(t)
             }
         }

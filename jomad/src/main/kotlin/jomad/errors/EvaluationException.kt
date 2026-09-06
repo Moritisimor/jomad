@@ -1,3 +1,3 @@
 package jomad.errors
 
-class EvaluationException(override val message: String?) : Exception(message)
+class EvaluationException(override val message: String?) : JomadException(message)

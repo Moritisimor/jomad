@@ -1,3 +1,3 @@
 package jomad.errors
 
-class TypeAssertionException(override val message: String?) : Exception(message)
+class TypeAssertionException(override val message: String?) : JomadException(message)
