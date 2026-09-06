@@ -13,6 +13,7 @@ class Interpreter {
     private val globalEnvironment = Environment()
     constructor(empty: Boolean = false) {
         if (!empty) {
+            prelude.registerStringFunctions(globalEnvironment)
             prelude.registerTypeCheckingFunctions(globalEnvironment)
             prelude.registerFunctionalFunctions(globalEnvironment)
             prelude.registerVariableFunctions(globalEnvironment)

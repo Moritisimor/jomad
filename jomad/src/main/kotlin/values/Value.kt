@@ -3,6 +3,9 @@ package values
 import errors.TypeAssertionException
 import expressions.Expression
 
+fun newValue(v: Value): Result<Value> = Result.success(v)
+fun newError(e: Throwable): Result<Value> = Result.failure(e)
+
 sealed interface Value {
     data object ValUnit : Value {
         override fun toString(): String = "<UNIT>"
