@@ -13,6 +13,7 @@ class Interpreter {
     private val globalEnvironment = Environment()
     constructor(empty: Boolean = false) {
         if (!empty) {
+            prelude.registerTypeCheckingFunctions(globalEnvironment)
             prelude.registerFunctionalFunctions(globalEnvironment)
             prelude.registerVariableFunctions(globalEnvironment)
             prelude.registerConditionals(globalEnvironment)
@@ -21,6 +22,7 @@ class Interpreter {
         }
     }
 
+    fun registerFunctions(func: (Environment) -> Unit) = func(globalEnvironment)
     fun doString(sourceCode: String): Result<Value> {
         val lexer = Lexer(sourceCode)
         val expressions = Parser(lexer.tokenize().fold(

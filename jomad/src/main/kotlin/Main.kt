@@ -6,9 +6,10 @@ fun main() {
         try {
             print("Jomad λ ")
             val sourceCode = readln()
-            interpreter.doString(sourceCode)
-                .onFailure { println("Error while evaluating: $it") }
-                .onSuccess { println(it) }
+            println(interpreter.doString(sourceCode).fold(
+                { it },
+                { "Error: $it" }
+            ))
         } catch (_: Exception) {
             println("Goodbye!")
             return

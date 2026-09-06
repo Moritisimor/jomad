@@ -92,4 +92,36 @@ sealed interface Value {
 
     @Suppress("Unused")
     fun getRecordOrThrow(): HashMap<String, Value> = getRecord().getOrThrow()
+
+    fun getNative(): Result<(List<Expression>, env: Environment) -> Result<Value>> = when(this) {
+        is ValNativeFunction -> Result.success(this.callback)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a native function"))
+    }
+
+    @Suppress("Unused")
+    fun getNativeOrThrow(): (List<Expression>, env: Environment) -> Result<Value> = getNative().getOrThrow()
+
+    fun getLambda(): Result<ValLambda> = when(this) {
+        is ValLambda -> Result.success(this)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a lambda"))
+    }
+
+    @Suppress("Unused")
+    fun getLambdaOrThrow(): ValLambda = getLambda().getOrThrow()
+
+    fun getMacro(): Result<ValMacro> = when(this) {
+        is ValMacro -> Result.success(this)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a macro"))
+    }
+
+    @Suppress("Unused")
+    fun getMacroOrThrow(): ValMacro = getMacro().getOrThrow()
+
+    fun getUnit(): Result<Unit> = when(this) {
+        is ValUnit -> Result.success(Unit)
+        else -> Result.failure(TypeAssertionException("Value could not be coerced to a unit"))
+    }
+
+    @Suppress("Unused")
+    fun getUnitOrThrow(): Unit = getUnit().getOrThrow()
 }
