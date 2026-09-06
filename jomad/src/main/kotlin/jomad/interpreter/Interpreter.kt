@@ -18,7 +18,8 @@ import java.io.FileNotFoundException
 
 class Interpreter {
     private val globalEnvironment = Environment()
-    constructor(empty: Boolean = false) {
+    constructor() : this(false)
+    constructor(empty: Boolean) {
         if (!empty) {
             registerStringFunctions(globalEnvironment)
             registerTypeCheckingFunctions(globalEnvironment)
