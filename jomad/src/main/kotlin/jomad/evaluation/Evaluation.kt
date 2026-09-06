@@ -29,3 +29,6 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
         }
     }
 }
+
+@Suppress("Unused")
+fun evaluateOrThrow(expr: Expression, env: Environment): Value = evaluate(expr, env).getOrThrow()
