@@ -45,8 +45,8 @@ fun evaluateToBooleanOrThrow(value: Expression, env: Environment): Boolean =
     )
 
 fun evaluateToList(value: Expression, env: Environment): Result<List<Value>> =
-    evaluateToList(value, env).fold(
-        { Result.success(it) },
+    evaluate(value, env).fold(
+        { it.getList() },
         { Result.failure(it) }
     )
 

@@ -8,6 +8,7 @@ import jomad.prelude.registerArithmetics
 import jomad.prelude.registerConditionals
 import jomad.prelude.registerFunctionalFunctions
 import jomad.prelude.registerIO
+import jomad.prelude.registerListFunctions
 import jomad.prelude.registerStringFunctions
 import jomad.prelude.registerTypeCheckingFunctions
 import jomad.prelude.registerVariableFunctions
@@ -21,10 +22,11 @@ class Interpreter {
     constructor() : this(false)
     constructor(empty: Boolean) {
         if (!empty) {
-            registerStringFunctions(globalEnvironment)
             registerTypeCheckingFunctions(globalEnvironment)
             registerFunctionalFunctions(globalEnvironment)
             registerVariableFunctions(globalEnvironment)
+            registerStringFunctions(globalEnvironment)
+            registerListFunctions(globalEnvironment)
             registerConditionals(globalEnvironment)
             registerArithmetics(globalEnvironment)
             registerIO(globalEnvironment)
