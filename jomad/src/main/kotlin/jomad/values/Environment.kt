@@ -4,9 +4,9 @@ import jomad.exceptions.EvaluationException
 import jomad.exceptions.JomadException
 import jomad.expressions.Expression
 
-class Environment {
+class Environment(val parent: Environment?) {
+    constructor() : this(null)
     private var bindings = HashMap<String, Value>()
-    private val parent: Environment? = null
 
     fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) {
         bindings[name] = Value.ValNativeFunction(callback)
