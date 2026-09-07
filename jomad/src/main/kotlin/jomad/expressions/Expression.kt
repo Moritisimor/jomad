@@ -76,4 +76,29 @@ sealed interface Expression {
 
     @Suppress("UNUSED")
     fun getUnitLiteralOrThrow(): Unit = this.getUnitLiteral().getOrThrow()
+
+    fun toSource(): String = when (this) {
+        is Symbol -> return this.name
+        is StringLiteral -> return "\"${this.elem}\""
+        is NumberLiteral ->
+            if (this.value % 1 == 0.0)
+                return this.value.toInt().toString()
+            else
+                return this.value.toString()
+
+        is BooleanLiteral -> return this.value.toString()
+        is UnitLiteral -> return "unit"
+        is ListLiteral -> {
+            val builder = StringBuilder()
+            builder.append('(')
+            for ((idx, elem) in this.elems.withIndex()) {
+                builder.append(elem.toSource())
+                if (idx != this.elems.size - 1)
+                    builder.append(' ')
+            }
+
+            builder.append(')')
+            return builder.toString()
+        }
+    }
 }

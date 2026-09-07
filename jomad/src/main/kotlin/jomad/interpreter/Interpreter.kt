@@ -33,6 +33,19 @@ class Interpreter {
         }
     }
 
+    @Suppress("Unused")
+    fun getGlobalEnvironment(): Environment = globalEnvironment
+
+    @Suppress("Unused")
+    fun getGlobalBindingOrNull(name: String): Value? = globalEnvironment.getBindingOrNull(name)
+
+    @Suppress("Unused")
+    fun getGlobalBindingOrThrow(name: String): Value = globalEnvironment.getBindingOrThrow(name)
+
+    @Suppress("Unused")
+    fun mutateGlobalBindingOrThrow(name: String, newValue: Value): Unit =
+        globalEnvironment.mutateBindingOrThrow(name, newValue)
+
     fun doString(sourceCode: String): Result<Value> {
         val lexer = Lexer(sourceCode)
         val expressions = Parser(lexer.tokenize().fold(

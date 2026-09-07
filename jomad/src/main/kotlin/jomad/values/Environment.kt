@@ -13,6 +13,9 @@ class Environment {
     }
 
     @Suppress("Unused")
+    fun getInnerHashMap(): HashMap<String, Value> = bindings
+
+    @Suppress("Unused")
     fun registerNativeThrowing(name: String, callback: (List<Expression>, Environment) -> Value) {
         bindings[name] = Value.ValNativeFunction { args, env ->
             try {
@@ -31,6 +34,12 @@ class Environment {
         }
     }
 
+    @Suppress("Unused")
+    fun getBindingOrNull(name: String): Value? = getBinding(name).getOrNull()
+
+    @Suppress("Unused")
+    fun getBindingOrThrow(name: String): Value = getBinding(name).getOrThrow()
+
     fun setBinding(name: String, value: Value): Result<Unit> = when (bindings[name]) {
         is Value -> Result.failure(EvaluationException("Binding $name already exists in this scope"))
         null -> {
@@ -38,6 +47,8 @@ class Environment {
             return Result.success(Unit)
         }
     }
+
+    fun setBindingOrThrow(name: String, value: Value) = setBinding(name, value).getOrThrow()
 
     fun mutateBinding(name: String, value: Value): Result<Unit> = when (bindings[name]) {
         null -> when (parent) {
@@ -50,4 +61,6 @@ class Environment {
             return Result.success(Unit)
         }
     }
+
+    fun mutateBindingOrThrow(name: String, value: Value) = mutateBinding(name, value).getOrThrow()
 }

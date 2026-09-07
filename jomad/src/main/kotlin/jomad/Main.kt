@@ -1,6 +1,6 @@
 package jomad
-
 import jomad.interpreter.Interpreter
+
 fun main() {
     val interpreter = Interpreter()
     while (true) {
@@ -11,11 +11,9 @@ fun main() {
             return
         }
 
-        println(
-            interpreter.doString(sourceCode).fold(
-                { it },
-                { "Error: $it" }
-            )
+        interpreter.doString(sourceCode).fold(
+            { println("Evaluates to: $it") },
+            { println("Error: $it") }
         )
     }
 }

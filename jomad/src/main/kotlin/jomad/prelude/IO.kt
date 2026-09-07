@@ -16,12 +16,7 @@ fun registerIO(environment: Environment) {
         return Result.success(Value.ValUnit)
     })
 
-    environment.registerNative(
-        "println",
-        fun(
-            args: List<Expression>,
-            env: Environment
-        ): Result<Value> {
+    environment.registerNative("println", fun(args: List<Expression>, env: Environment): Result<Value> {
         for (arg in args) {
             evaluate(arg, env)
                 .onSuccess { print(it) }

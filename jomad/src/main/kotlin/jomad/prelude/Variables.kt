@@ -1,27 +1,31 @@
 package jomad.prelude
 
-import jomad.evaluation.evaluate
+import jomad.evaluation.evaluateOrThrow
 import jomad.exceptions.EvaluationException
 import jomad.expressions.Expression
 import jomad.values.Environment
 import jomad.values.Value
+import jomad.values.newUnit
 
 fun registerVariableFunctions(env: Environment) {
-    env.registerNative("let", fun(args: List<Expression>, env: Environment): Result<Value> {
+    env.registerNativeThrowing("let", fun(args: List<Expression>, env: Environment): Value {
         if (args.size != 2)
-            return Result.failure(EvaluationException("let expects 2 arguments"))
+            throw EvaluationException("let expects 2 arguments")
 
-        val bindingName = args[0].getSymbol().fold(
-            { it },
-            { return Result.failure(it) }
-        )
+        val bindingName = args[0].getSymbolOrThrow()
+        val bindingValue = evaluateOrThrow(args[1], env)
+        env.setBindingOrThrow(bindingName, bindingValue)
+        return newUnit()
+    })
 
-        val bindingValue = evaluate(args[1], env).fold(
-            { it },
-            { return Result.failure(it) }
-        )
+    env.registerNativeThrowing("mut", fun(args: List<Expression>, env: Environment): Value {
+        if (args.size != 2)
+            throw EvaluationException("mut expects 2 arguments")
 
-        env.setBinding(bindingName, bindingValue).onFailure { return Result.failure(it) }
-        return Result.success(Value.ValUnit)
+        val bindingName = args[0].getSymbolOrThrow()
+        val newBindingValue = evaluateOrThrow(args[1], env)
+        env.mutateBindingOrThrow(bindingName, newBindingValue)
+
+        return newUnit()
     })
 }
