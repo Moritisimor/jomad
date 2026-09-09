@@ -1,5 +1,6 @@
 package jomad.prelude
 
+import jomad.evaluation.evaluateOrThrow
 import jomad.exceptions.EvaluationException
 import jomad.expressions.Expression
 import jomad.values.Environment
@@ -44,5 +45,14 @@ fun registerFunctionalFunctions(env: Environment) {
             body = body,
             captured = env
         )
+    })
+
+    env.registerNativeThrowing("do", fun(args: List<Expression>, env: Environment): Value {
+        var lastExpression: Value = newUnit()
+        for (arg in args) {
+            lastExpression = evaluateOrThrow(arg, env)
+        }
+
+        return lastExpression
     })
 }

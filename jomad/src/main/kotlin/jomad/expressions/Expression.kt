@@ -34,7 +34,6 @@ sealed interface Expression {
         else -> Result.failure(EvaluationException("Could not coerce expression to list literal"))
     }
 
-    @Suppress("UNUSED")
     fun getListLiteralOrThrow(): List<Expression> = this.getListLiteral().getOrThrow()
 
     fun getSymbol(): Result<String> = when (this) {
@@ -42,7 +41,6 @@ sealed interface Expression {
         else -> Result.failure(EvaluationException("Could not coerce expression to symbol"))
     }
 
-    @Suppress("UNUSED")
     fun getSymbolOrThrow(): String = this.getSymbol().getOrThrow()
 
     fun getStringLiteral(): Result<String> = when (this) {
@@ -50,7 +48,7 @@ sealed interface Expression {
         else -> Result.failure(EvaluationException("Could not coerce expression to string literal"))
     }
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun getStringLiteralOrThrow(): String = this.getStringLiteral().getOrThrow()
 
     fun getNumberLiteral(): Result<Double> = when (this) {
@@ -58,7 +56,7 @@ sealed interface Expression {
         else -> Result.failure(EvaluationException("Could not coerce expression to number literal"))
     }
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun getNumberLiteralOrThrow(): Double = this.getNumberLiteral().getOrThrow()
 
     fun getBooleanLiteral(): Result<Boolean> = when (this) {
@@ -66,7 +64,7 @@ sealed interface Expression {
         else -> Result.failure(EvaluationException("Could not coerce expression to boolean literal"))
     }
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun getBooleanLiteralOrThrow(): Boolean = this.getBooleanLiteral().getOrThrow()
 
     fun getUnitLiteral(): Result<Unit> = when (this) {
@@ -74,7 +72,7 @@ sealed interface Expression {
         else -> Result.failure(EvaluationException("Could not coerce expression to unit literal"))
     }
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun getUnitLiteralOrThrow(): Unit = this.getUnitLiteral().getOrThrow()
 
     fun toSource(): String = when (this) {

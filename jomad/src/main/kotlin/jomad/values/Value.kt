@@ -4,26 +4,14 @@ package jomad.values
 import jomad.exceptions.TypeAssertionException
 import jomad.expressions.Expression
 
-fun newValue(v: Value): Result<Value> = Result.success(v)
-fun newError(e: Throwable): Result<Value> = Result.failure(e)
-
-@Suppress("Unused")
 fun newString(s: String): Value.ValString = Value.ValString(s)
-
-@Suppress("Unused")
 fun newNumber(d: Double): Value.ValNumber = Value.ValNumber(d)
-
-@Suppress("Unused")
 fun newBoolean(b: Boolean): Value.ValBoolean = Value.ValBoolean(b)
-
-@Suppress("Unused")
 fun newList(l: List<Value>): Value.ValList = Value.ValList(l)
+fun newUnit() = Value.ValUnit
 
 @Suppress("Unused")
 fun newRecord(hm: HashMap<String, Value>) = Value.ValRecord(hm)
-
-@Suppress("Unused")
-fun newUnit() = Value.ValUnit
 
 sealed interface Value {
     data object ValUnit : Value {

@@ -15,7 +15,6 @@ class Environment(val parent: Environment?) {
     @Suppress("Unused")
     fun getInnerHashMap(): HashMap<String, Value> = bindings
 
-    @Suppress("Unused")
     fun registerNativeThrowing(name: String, callback: (List<Expression>, Environment) -> Value) {
         bindings[name] = Value.ValNativeFunction { args, env ->
             try {
@@ -34,10 +33,8 @@ class Environment(val parent: Environment?) {
         }
     }
 
-    @Suppress("Unused")
     fun getBindingOrNull(name: String): Value? = getBinding(name).getOrNull()
 
-    @Suppress("Unused")
     fun getBindingOrThrow(name: String): Value = getBinding(name).getOrThrow()
 
     fun setBinding(name: String, value: Value): Result<Unit> = when (bindings[name]) {

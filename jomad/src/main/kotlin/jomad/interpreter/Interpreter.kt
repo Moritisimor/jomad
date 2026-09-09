@@ -8,9 +8,11 @@ import jomad.prelude.registerArithmetics
 import jomad.prelude.registerConditionals
 import jomad.prelude.registerFunctionalFunctions
 import jomad.prelude.registerIO
+import jomad.prelude.registerInternalExceptionFunctions
 import jomad.prelude.registerListFunctions
 import jomad.prelude.registerStringFunctions
 import jomad.prelude.registerTypeCheckingFunctions
+import jomad.prelude.registerTypeConversionFunctions
 import jomad.prelude.registerVariableFunctions
 import jomad.values.Environment
 import jomad.values.Value
@@ -22,6 +24,8 @@ class Interpreter {
     constructor() : this(false)
     constructor(empty: Boolean) {
         if (!empty) {
+            registerInternalExceptionFunctions(globalEnvironment)
+            registerTypeConversionFunctions(globalEnvironment)
             registerTypeCheckingFunctions(globalEnvironment)
             registerFunctionalFunctions(globalEnvironment)
             registerVariableFunctions(globalEnvironment)
@@ -64,7 +68,7 @@ class Interpreter {
         return Result.success(lastValue)
     }
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun doStringOrThrow(sourceCode: String): Value = doString(sourceCode).fold(
         onSuccess = { it },
         onFailure = { throw it }
@@ -79,17 +83,17 @@ class Interpreter {
         }
     }
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun doFileOrThrow(path: String): Value = doFile(path).fold(
         onSuccess = { it },
         onFailure = { throw it }
     )
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun registerNative(name: String, callback: (List<Expression>, Environment) -> Result<Value>) =
         globalEnvironment.registerNative(name, callback)
 
-    @Suppress("UNUSED")
+    @Suppress("Unused")
     fun registerNativeThrowing(name: String, callback: (List<Expression>, Environment) -> Value) =
         globalEnvironment.registerNativeThrowing(name, callback)
 }

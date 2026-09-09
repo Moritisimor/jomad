@@ -20,7 +20,7 @@ kotlin {
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "MainKt"
+        attributes["Main-Class"] = "jomad.MainKt"
     }
 }
 
