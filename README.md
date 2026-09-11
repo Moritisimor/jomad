@@ -3,37 +3,53 @@ Nomad Lisp for the JVM! Written in Kotlin.
 
 ## Embedding Examples (Java)
 ```java
-import jomad.evaluation.Eval;
-import jomad.interpreter.Interpreter;
-import jomad.values.Values;
+import com.github.moritisimor.jomad.evaluation.Eval;
+import com.github.moritisimor.jomad.evaluation.TypedEval;
+import com.github.moritisimor.jomad.exceptions.EvaluationException;
+import com.github.moritisimor.jomad.interpreter.Interpreter;
+import com.github.moritisimor.jomad.values.Values;
 
 void main() {
-    var interpreter = new Interpreter(); // Instantiate an interpreter
+    var interpreter = new Interpreter();
     interpreter.registerNativeThrowing("hi_from_java", (_, _) -> {
-        IO.println("Hello from Java!"); // Do Java Stuff
-        return Values.newUnit(); // Return unit (similar to void/null)
+        IO.println("Hello from Java!");
+        return Values.newUnit();
     });
 
     interpreter.registerNativeThrowing("log", (args, env) -> {
         var currentDate = new Date();
         IO.print(currentDate + ": ");
-        if (args.isEmpty())
+        if (args.isEmpty()) {
             IO.println("No Message");
-        else
-            for (var arg : args)
+        } else {
+            for (var arg : args) {
                 IO.print(Eval.evaluateOrThrow(arg, env).toString());
-                // Evaluate each received expression.
+                IO.print(' ');
+            }
 
-        IO.print("\n");
+            IO.print("\n");
+        }
+
         return Values.newUnit();
     });
 
-    interpreter.doStringOrThrow("(log \"WARNING! \" \"This is a log!\")"); // Run some code
-    interpreter.doStringOrThrow("(log)"); // Empty log
+    interpreter.registerNativeThrowing("sqrt", (args, env) -> {
+        if (args.size() != 1)
+            throw new EvaluationException("sqrt expects 1 argument");
+
+        var x = TypedEval.evaluateToNumberOrThrow(args.getFirst(), env);
+        return Values.newNumber(Math.sqrt(x));
+    });
+
     interpreter.doStringOrThrow("(hi_from_java)");
-    
-    // This basically tries to cast an evaluated expression to a double, throwing if it's not possible
+
+    interpreter.doStringOrThrow("(log \"WARNING!\" \"This is a log!\")");
+    interpreter.doStringOrThrow("(log)"); // Empty log
+
     var result = interpreter.doStringOrThrow("(+ 1 2)").getNumberOrThrow();
     IO.println(result);
+
+    var squareRoot = interpreter.doStringOrThrow("(sqrt 81)").getNumberOrThrow();
+    IO.println(squareRoot);
 }
 ```
