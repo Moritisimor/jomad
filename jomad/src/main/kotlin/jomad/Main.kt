@@ -39,7 +39,6 @@ fun main(args: Array<String>) {
         try {
             val sourceCode = File(filePath).readText()
             interpreter.doString(sourceCode)
-                .onSuccess { println(it) }
                 .onFailure { println("Error: $it"); exitProcess(1) }
         } catch (_: FileNotFoundException) {
             println("File not found: $filePath")

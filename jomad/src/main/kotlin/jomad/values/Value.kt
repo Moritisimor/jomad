@@ -1,6 +1,8 @@
 @file:JvmName("Values")
 package jomad.values
 
+import jomad.evaluation.evaluate
+import jomad.exceptions.EvaluationException
 import jomad.exceptions.TypeAssertionException
 import jomad.expressions.Expression
 
@@ -48,6 +50,25 @@ sealed interface Value {
         val body: Expression
     ) : Value {
         override fun toString(): String = "<LAMBDA>"
+        fun paramsSize() = parameters.size
+
+        fun invoke(vararg suppliedParams: Value): Result<Value> {
+            val expected = parameters.size
+            val actual = suppliedParams.size
+
+            val localEnv = Environment(captured)
+            if (expected != actual)
+                return Result.failure(EvaluationException(
+                    "Lambda was invoked with the wrong amount of arguments. Expected: $expected, got: $actual",
+                ))
+
+            for ((idx, param) in suppliedParams.withIndex())
+                localEnv.setBinding(parameters[idx], param)
+
+            return evaluate(body, localEnv)
+        }
+
+        fun invokeOrThrow(vararg suppliedParams: Value): Value = invoke(*suppliedParams).getOrThrow()
     }
 
     data class ValNativeFunction(

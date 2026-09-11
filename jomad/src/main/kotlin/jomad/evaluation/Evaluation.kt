@@ -25,30 +25,24 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
         when (funExpr) {
             is Value.ValNativeFunction -> funExpr.callback(funList.subList(1, funList.size), env)
             is Value.ValLambda -> {
-                val body = funExpr.body
-                val captured = funExpr.captured
-                val paramNames = funExpr.parameters
-                val suppliedParams = funList.subList(1, funList.size)
-                val expected = paramNames.size
-                val actual = suppliedParams.size
+                val funParams = funList.subList(1, funList.size)
+                val expected = funExpr.paramsSize()
+                val actual = funParams.size
 
-                val localEnv = Environment(captured)
-                if (paramNames.size != suppliedParams.size)
+                if (funParams.size != funExpr.paramsSize())
                     return Result.failure(EvaluationException(
-                        "Lambda was invoked with the wrong amount of arguments. Expected: $expected, got: $actual",
+                        "Lambda invoked with wrong amount of args. Expected: $expected, got: $actual",
                     ))
 
-                for ((idx, param) in suppliedParams.withIndex()) {
-                    val evaluated = evaluate(param, env).fold(
-                        onSuccess = { it },
+                val paramAcc = mutableListOf<Value>()
+                for (param in funList.subList(1, funList.size)) {
+                    evaluate(param, env).fold(
+                        onSuccess = { paramAcc.add(it) },
                         onFailure = { return Result.failure(it) }
                     )
-
-                    localEnv.setBinding(paramNames[idx], evaluated)
-                        .onFailure { return Result.failure(it) }
                 }
 
-                return evaluate(body, localEnv)
+                funExpr.invoke(*paramAcc.toTypedArray())
             }
 
             is Value.ValMacro -> throw NotImplementedError("Macros are not yet implemented!")

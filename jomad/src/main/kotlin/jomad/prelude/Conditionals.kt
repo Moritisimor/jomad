@@ -48,6 +48,13 @@ fun registerConditionals(env: Environment) {
         return newUnit()
     })
 
+    env.registerNativeThrowing("not", fun(args: List<Expression>, env: Environment): Value {
+        if (args.size != 1)
+            throw EvaluationException("not expects 1 argument")
+
+        return newBoolean(!evaluateToBooleanOrThrow(args[0], env))
+    })
+
     env.registerNativeThrowing("=", fun(args: List<Expression>, env: Environment): Value {
         if (args.size != 2)
             throw EvaluationException("= expects 2 arguments")

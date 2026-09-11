@@ -10,6 +10,7 @@ import jomad.prelude.registerFunctionalFunctions
 import jomad.prelude.registerIO
 import jomad.prelude.registerInternalExceptionFunctions
 import jomad.prelude.registerListFunctions
+import jomad.prelude.registerLoopFunctions
 import jomad.prelude.registerStringFunctions
 import jomad.prelude.registerTypeCheckingFunctions
 import jomad.prelude.registerTypeConversionFunctions
@@ -31,6 +32,7 @@ class Interpreter {
             registerVariableFunctions(globalEnvironment)
             registerStringFunctions(globalEnvironment)
             registerListFunctions(globalEnvironment)
+            registerLoopFunctions(globalEnvironment)
             registerConditionals(globalEnvironment)
             registerArithmetics(globalEnvironment)
             registerIO(globalEnvironment)

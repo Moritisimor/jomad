@@ -69,3 +69,11 @@ fun evaluateToRecordOrThrow(value: Expression, env: Environment): HashMap<String
         { it },
         { throw it }
     )
+
+fun evaluateToLambda(value: Expression, env: Environment): Result<Value.ValLambda> =
+    evaluate(value, env).fold(
+        { it.getLambda() },
+        { Result.failure(it) }
+    )
+
+fun evaluateToLambdaOrThrow(value: Expression, env: Environment) = evaluateToLambda(value, env).getOrThrow()
