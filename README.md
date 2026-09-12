@@ -1,6 +1,26 @@
 # Jomad
 [Nomad Lisp](https://github.com/Moritisimor/nomad-lisp) for the JVM! Written in Kotlin.
 
+## Getting started
+Jomad is planned to be published to the central maven repositories later, but for now, you will need to use a local .jar-file.
+
+### Cloning and building with Gradle
+#### Linux/MacOS/BSD (Shell)
+```bash
+git clone https://github.com/Moritisimor/jomad
+cd jomad/jomad
+./gradlew shadowJar
+java -jar build/libs/jomad-1.0-SNAPSHOT-all.jar
+```
+
+#### Windows (cmd.exe)
+```bash
+git clone https://github.com/Moritisimor/jomad
+cd jomad/jomad
+./gradlew.bat shadowJar
+java -jar build/libs/jomad-1.0-SNAPSHOT-all.jar
+```
+
 ## Embedding Examples (Java)
 ```java
 import com.github.moritisimor.jomad.evaluation.Eval;
