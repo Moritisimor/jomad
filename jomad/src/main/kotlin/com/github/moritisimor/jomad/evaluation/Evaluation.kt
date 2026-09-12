@@ -31,8 +31,8 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
             is Value.ValNativeFunction -> {
                 try {
                     val x = funExpr.callback(funList.subList(1, funList.size), env)
-                    x.getOrThrow()
-                    return x
+                    x.getOrThrow()  // We don't actually care about the result here,
+                    return x        // we just want to throw if it's an error
                 } catch (e: EvaluationException) {
                     return Result.failure(EvaluationException(e.message, e.callStack + expr))
                 } catch (e: Throwable) {

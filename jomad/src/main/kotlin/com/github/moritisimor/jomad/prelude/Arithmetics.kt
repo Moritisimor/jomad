@@ -25,7 +25,7 @@ fun registerArithmetics(environment: Environment) {
 
             is Value.ValString -> when (y) {
                 is Value.ValString -> newString(x.value + y.value)
-                else -> throw EvaluationException("Expected string after $y")
+                else -> throw EvaluationException("Expected string after $x")
             }
 
             else -> throw EvaluationException("Cannot apply + on these values: $x and $y")

@@ -29,9 +29,16 @@ fun main(args: Array<String>) {
             }
 
             val sourceCode = args[1]
-            interpreter.doString(sourceCode)
-                .onSuccess { println(it) }
-                .onFailure { println("Error: $it"); exitProcess(1) }
+            try {
+                interpreter.doStringOrThrow(sourceCode)
+            } catch (e: EvaluationException) {
+                println("Error: ${e.message}")
+                e.printCallStack()
+                exitProcess(1)
+            } catch (e: Throwable) {
+                println("Error: ${e.message}")
+                exitProcess(1)
+            }
 
             return
         }
@@ -39,8 +46,15 @@ fun main(args: Array<String>) {
         val filePath = args[0]
         try {
             val sourceCode = File(filePath).readText()
-            interpreter.doString(sourceCode)
-                .onFailure { println("Error: $it"); exitProcess(1) }
+            try {
+                interpreter.doStringOrThrow(sourceCode)
+            } catch (e: EvaluationException) {
+                println("Error: ${e.message}")
+                e.printCallStack()
+                exitProcess(1)
+            } catch (e: Throwable) {
+                println("Error: ${e.message}")
+            }
         } catch (_: FileNotFoundException) {
             println("File not found: $filePath")
             exitProcess(1)
