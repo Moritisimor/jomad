@@ -11,6 +11,7 @@ import com.github.moritisimor.jomad.prelude.registerIO
 import com.github.moritisimor.jomad.prelude.registerInternalExceptionFunctions
 import com.github.moritisimor.jomad.prelude.registerListFunctions
 import com.github.moritisimor.jomad.prelude.registerLoopFunctions
+import com.github.moritisimor.jomad.prelude.registerOSInteractiveFunctions
 import com.github.moritisimor.jomad.prelude.registerRecordFunctions
 import com.github.moritisimor.jomad.prelude.registerStringFunctions
 import com.github.moritisimor.jomad.prelude.registerTypeCheckingFunctions
@@ -28,8 +29,10 @@ class Interpreter {
     constructor() : this(false)
     constructor(empty: Boolean) {
         if (!empty) {
+
             registerInternalExceptionFunctions(globalEnvironment)
             registerTypeConversionFunctions(globalEnvironment)
+            registerOSInteractiveFunctions(globalEnvironment)
             registerTypeCheckingFunctions(globalEnvironment)
             registerFunctionalFunctions(globalEnvironment)
             registerVariableFunctions(globalEnvironment)
