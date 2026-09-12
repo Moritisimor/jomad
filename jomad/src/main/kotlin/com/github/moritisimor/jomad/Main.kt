@@ -3,7 +3,6 @@ package com.github.moritisimor.jomad
 
 import com.github.moritisimor.jomad.exceptions.EvaluationException
 import com.github.moritisimor.jomad.interpreter.Interpreter
-import java.io.File
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
@@ -30,7 +29,7 @@ fun main(args: Array<String>) {
 
             val sourceCode = args[1]
             try {
-                interpreter.doStringOrThrow(sourceCode)
+                IO.println(interpreter.doStringOrThrow(sourceCode))
             } catch (e: EvaluationException) {
                 println("Error: ${e.message}")
                 e.printCallStack()
@@ -45,19 +44,16 @@ fun main(args: Array<String>) {
 
         val filePath = args[0]
         try {
-            val sourceCode = File(filePath).readText()
-            try {
-                interpreter.doStringOrThrow(sourceCode)
-            } catch (e: EvaluationException) {
-                println("Error: ${e.message}")
-                e.printCallStack()
-                exitProcess(1)
-            } catch (e: Throwable) {
-                println("Error: ${e.message}")
-            }
+            interpreter.doFileOrThrow(filePath)
         } catch (_: FileNotFoundException) {
             println("File not found: $filePath")
             exitProcess(1)
+        } catch (e: EvaluationException) {
+            println("Error: ${e.message}")
+            e.printCallStack()
+            exitProcess(1)
+        } catch (e: Throwable) {
+            println("Error: ${e.message}")
         }
 
         return
@@ -72,7 +68,7 @@ fun main(args: Array<String>) {
         }
 
         try {
-            interpreter.doStringOrThrow(sourceCode)
+            IO.println(interpreter.doStringOrThrow(sourceCode))
         } catch (e: EvaluationException) {
             println("Error: ${e.message}")
             e.printCallStack()
