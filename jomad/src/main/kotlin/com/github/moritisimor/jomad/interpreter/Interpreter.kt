@@ -17,6 +17,8 @@ import com.github.moritisimor.jomad.prelude.registerStringFunctions
 import com.github.moritisimor.jomad.prelude.registerTypeCheckingFunctions
 import com.github.moritisimor.jomad.prelude.registerTypeConversionFunctions
 import com.github.moritisimor.jomad.prelude.registerVariableFunctions
+import com.github.moritisimor.jomad.srcprelude.registerArithmeticsSrc
+import com.github.moritisimor.jomad.srcprelude.registerConditionalsSrc
 import com.github.moritisimor.jomad.srcprelude.registerListFunctionsSrc
 import com.github.moritisimor.jomad.srcprelude.registerStringFunctionsSrc
 import com.github.moritisimor.jomad.values.Environment
@@ -29,7 +31,6 @@ class Interpreter {
     constructor() : this(false)
     constructor(empty: Boolean) {
         if (!empty) {
-
             registerInternalExceptionFunctions(globalEnvironment)
             registerTypeConversionFunctions(globalEnvironment)
             registerOSInteractiveFunctions(globalEnvironment)
@@ -46,6 +47,8 @@ class Interpreter {
 
             registerStringFunctionsSrc(this)
             registerListFunctionsSrc(this)
+            registerConditionalsSrc(this)
+            registerArithmeticsSrc(this)
         }
     }
 
