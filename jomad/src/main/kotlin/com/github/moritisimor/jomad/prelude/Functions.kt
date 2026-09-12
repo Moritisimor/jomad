@@ -55,4 +55,25 @@ fun registerFunctionalFunctions(env: Environment) {
 
         return lastExpression
     })
+
+    env.registerNativeThrowing("scoped", fun(args: List<Expression>, env: Environment): Value {
+        if (args.size != 2)
+            throw EvaluationException("scoped expects 2 arguments")
+
+        val bindingList = args[0].getListLiteralOrThrow()
+        val body = args[1]
+        val localEnv = Environment(env)
+
+        for (elem in bindingList) {
+            val bindingPair = elem.getListLiteralOrThrow()
+            if (bindingPair.size != 2)
+                throw EvaluationException("Bad syntax in binding-pair (expected 2 elements)")
+
+            val bindingName = bindingPair[0].getSymbolOrThrow()
+            val bindingValue = evaluateOrThrow(bindingPair[1], env)
+            localEnv.setBindingOrThrow(bindingName, bindingValue)
+        }
+
+        return evaluateOrThrow(body, localEnv)
+    })
 }
