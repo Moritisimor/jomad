@@ -18,13 +18,28 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
         if (funList.isEmpty())
             return Result.success(Value.ValList(listOf()))
 
-        val funExpr = evaluate(funList.first(), env).fold(
-            onSuccess = { it },
-            onFailure = { return Result.failure(it) }
-        )
+        val funExpr: Value
+        try {
+            funExpr = evaluateOrThrow(funList.first(), env)
+        } catch (e: EvaluationException) {
+            return Result.failure(EvaluationException(e.message, e.callStack + expr))
+        } catch (e: Throwable) {
+            return Result.failure(e)
+        }
 
         when (funExpr) {
-            is Value.ValNativeFunction -> funExpr.callback(funList.subList(1, funList.size), env)
+            is Value.ValNativeFunction -> {
+                try {
+                    val x = funExpr.callback(funList.subList(1, funList.size), env)
+                    x.getOrThrow()
+                    return x
+                } catch (e: EvaluationException) {
+                    return Result.failure(EvaluationException(e.message, e.callStack + expr))
+                } catch (e: Throwable) {
+                    return Result.failure(e)
+                }
+            }
+
             is Value.ValLambda -> {
                 val funParams = funList.subList(1, funList.size)
                 val expected = funExpr.paramsSize()
@@ -33,21 +48,27 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
                 if (funParams.size != funExpr.paramsSize())
                     return Result.failure(EvaluationException(
                         "Lambda invoked with wrong amount of args. Expected: $expected, got: $actual",
+                        listOf(expr)
                     ))
 
                 val paramAcc = mutableListOf<Value>()
                 for (param in funList.subList(1, funList.size)) {
-                    evaluate(param, env).fold(
-                        onSuccess = { paramAcc.add(it) },
-                        onFailure = { return Result.failure(it) }
-                    )
+                    try {
+                        evaluateOrThrow(param, env)
+                    } catch (e: EvaluationException) {
+                        return Result.failure(EvaluationException(e.message, e.callStack + expr))
+                    } catch (e: Throwable) {
+                        return Result.failure(e)
+                    }
                 }
 
                 funExpr.invoke(*paramAcc.toTypedArray())
             }
 
             is Value.ValMacro -> throw NotImplementedError("Macros are not yet implemented!")
-            else -> Result.failure(EvaluationException("Attempt to invoke non-callable object"))
+            else -> Result.failure(EvaluationException(
+                "Attempt to invoke non-callable object", listOf(expr)
+            ))
         }
     }
 }

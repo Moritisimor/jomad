@@ -1,6 +1,7 @@
 @file:Suppress("KotlinPrintToLogpoint")
 package com.github.moritisimor.jomad
 
+import com.github.moritisimor.jomad.exceptions.EvaluationException
 import com.github.moritisimor.jomad.interpreter.Interpreter
 import java.io.File
 import java.io.FileNotFoundException
@@ -56,9 +57,13 @@ fun main(args: Array<String>) {
             return
         }
 
-        interpreter.doString(sourceCode).fold(
-            { println("Evaluates to: $it") },
-            { println("Error: $it") }
-        )
+        try {
+            interpreter.doStringOrThrow(sourceCode)
+        } catch (e: EvaluationException) {
+            println("Error: ${e.message}")
+            e.printCallStack()
+        } catch (e: Exception) {
+            println("Error: $e")
+        }
     }
 }
