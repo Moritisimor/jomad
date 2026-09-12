@@ -6,6 +6,7 @@ import com.github.moritisimor.jomad.evaluation.evaluate
 import com.github.moritisimor.jomad.exceptions.EvaluationException
 import com.github.moritisimor.jomad.exceptions.TypeAssertionException
 import com.github.moritisimor.jomad.expressions.Expression
+import com.github.moritisimor.jomad.expressions.newListLit
 
 fun newString(s: String): Value.ValString = Value.ValString(s)
 fun newNumber(d: Double): Value.ValNumber = Value.ValNumber(d)
@@ -51,6 +52,8 @@ sealed interface Value {
         val body: Expression
     ) : Value {
         override fun toString(): String = "<LAMBDA>"
+
+        @Suppress("Unused")
         fun paramsSize() = parameters.size
 
         fun invoke(vararg suppliedParams: Value): Result<Value> {
@@ -83,6 +86,49 @@ sealed interface Value {
         val body: List<Expression>
     ) : Value {
         override fun toString(): String = "<MACRO>"
+
+        private fun substitute(e: List<Expression>, bindings: HashMap<String, Expression>): List<Expression> {
+            val constructedExpression = mutableListOf<Expression>()
+            for (expr in e) {
+                when (expr) {
+                    is Expression.Symbol -> when (val v = bindings[expr.name]) {
+                        null -> constructedExpression.add(expr)
+                        else -> constructedExpression.add(v)
+                    }
+
+                    is Expression.ListLiteral -> constructedExpression.add(newListLit(
+                        *substitute(expr.elems, bindings).toTypedArray()
+                    ))
+
+                    else -> constructedExpression.add(expr)
+                }
+            }
+
+            return constructedExpression
+        }
+
+        fun invoke(env: Environment, vararg suppliedParams: Expression): Result<Value> {
+            val expected = parameters.size
+            val actual = suppliedParams.size
+
+            if (expected != actual)
+                return Result.failure(EvaluationException(
+                    "Macro was invoked with the wrong amount of arguments. Expected: $expected, got: $actual",
+                ))
+
+            val bindings = HashMap<String, Expression>()
+            for ((idx, param) in suppliedParams.withIndex())
+                bindings[parameters[idx]] = param
+
+            val l = newListLit(*substitute(body, bindings).toTypedArray())
+            return evaluate(l, env).fold(
+                { Result.success(it) },
+                { Result.failure(it) }
+            )
+        }
+
+        fun invokeOrThrow(env: Environment, vararg suppliedParams: Expression) =
+            invoke(env, *suppliedParams).getOrThrow()
     }
 
     fun getString(): Result<String> = when (this) {

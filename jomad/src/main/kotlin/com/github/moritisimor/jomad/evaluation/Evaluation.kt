@@ -74,7 +74,18 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
                 }
             }
 
-            is Value.ValMacro -> throw NotImplementedError("Macros are not yet implemented!")
+            is Value.ValMacro -> {
+                val macParams = funList.subList(1, funList.size)
+                try {
+                    val res = funExpr.invokeOrThrow(env, *macParams.toTypedArray())
+                    return Result.success(res)
+                } catch (e: EvaluationException) {
+                    return Result.failure(EvaluationException(e.message, e.callStack + expr))
+                } catch (e: Throwable) {
+                    return Result.failure(e)
+                }
+            }
+
             else -> Result.failure(EvaluationException(
                 "Attempt to invoke non-callable object", listOf(expr)
             ))

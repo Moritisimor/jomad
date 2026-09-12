@@ -76,4 +76,23 @@ fun registerFunctionalFunctions(env: Environment) {
 
         return evaluateOrThrow(body, localEnv)
     })
+
+    env.registerNativeThrowing("letmac", fun(args: List<Expression>, env: Environment): Value {
+        if (args.size < 3)
+            throw EvaluationException("letmac expects at least 3 arguments")
+
+        val macroName = args[0].getSymbolOrThrow()
+        val macroParams = args[1].getListLiteralOrThrow()
+        val macroBody = args.drop(2)
+        val paramAcc = mutableListOf<String>()
+        for (param in macroParams)
+            paramAcc.addLast(param.getSymbolOrThrow())
+
+        env.setBindingOrThrow(macroName, Value.ValMacro(
+            parameters = paramAcc.toList(),
+            body = macroBody,
+        ))
+
+        return newUnit()
+    })
 }
