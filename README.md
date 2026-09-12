@@ -1,5 +1,5 @@
-# jomad
-Nomad Lisp for the JVM! Written in Kotlin.
+# Jomad
+[Nomad Lisp](https://github.com/Moritisimor/nomad-lisp) for the JVM! Written in Kotlin.
 
 ## Embedding Examples (Java)
 ```java
