@@ -5,7 +5,7 @@ package com.github.moritisimor.jomad.expressions
 import com.github.moritisimor.jomad.exceptions.EvaluationException
 
 @Suppress("Unused")
-fun newListLit(elems: List<Expression>) = Expression.ListLiteral(elems)
+fun newListLit(vararg elems: Expression) = Expression.ListLiteral(elems.toList())
 
 @Suppress("Unused")
 fun newSymbol(name: String) = Expression.Symbol(name)
