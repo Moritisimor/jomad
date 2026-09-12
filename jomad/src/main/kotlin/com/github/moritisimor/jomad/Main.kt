@@ -3,6 +3,9 @@ package com.github.moritisimor.jomad
 
 import com.github.moritisimor.jomad.exceptions.EvaluationException
 import com.github.moritisimor.jomad.interpreter.Interpreter
+import com.github.moritisimor.jomad.values.Value
+import com.github.moritisimor.jomad.values.newList
+import com.github.moritisimor.jomad.values.newString
 import java.io.FileNotFoundException
 import kotlin.system.exitProcess
 
@@ -33,6 +36,7 @@ fun main(args: Array<String>) {
             } catch (e: EvaluationException) {
                 println("Error: ${e.message}")
                 e.printCallStack()
+                e.printStackTrace()
                 exitProcess(1)
             } catch (e: Throwable) {
                 println("Error: ${e.message}")
@@ -43,7 +47,12 @@ fun main(args: Array<String>) {
         }
 
         val filePath = args[0]
+        val jomadArgs = mutableListOf<Value>()
+        for (arg in args.drop(1))
+            jomadArgs.addLast(newString(arg))
+
         try {
+            interpreter.getGlobalEnvironment().setBindingOrThrow("args", newList(jomadArgs))
             interpreter.doFileOrThrow(filePath)
         } catch (_: FileNotFoundException) {
             println("File not found: $filePath")

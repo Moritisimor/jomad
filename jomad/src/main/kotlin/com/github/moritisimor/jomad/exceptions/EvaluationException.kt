@@ -9,6 +9,10 @@ open class EvaluationException(
     constructor(message: String?) : this(message, listOf())
 
     fun printCallStack() {
+        if (callStack.isEmpty()) {
+            println("No call stack")
+        }
+
         for ((idx, call) in callStack.withIndex()) {
             println("\t$idx -> ${call.toSource()}")
         }

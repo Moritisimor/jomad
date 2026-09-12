@@ -11,7 +11,17 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
     is Expression.BooleanLiteral -> Result.success(Value.ValBoolean(expr.value))
     is Expression.NumberLiteral -> Result.success(Value.ValNumber(expr.value))
     is Expression.StringLiteral -> Result.success(Value.ValString(expr.elem))
-    is Expression.Symbol -> env.getBinding(expr.name)
+    is Expression.Symbol -> {
+        try {
+            val x = env.getBinding(expr.name)
+            return Result.success(x.getOrThrow())
+        } catch (e: EvaluationException) {
+            return Result.failure(EvaluationException(e.message, e.callStack + expr))
+        } catch (e: Throwable) {
+            return Result.failure(e)
+        }
+    }
+
     is Expression.UnitLiteral -> Result.success(Value.ValUnit)
     is Expression.ListLiteral -> {
         val funList = expr.elems
@@ -42,19 +52,11 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
 
             is Value.ValLambda -> {
                 val funParams = funList.subList(1, funList.size)
-                val expected = funExpr.paramsSize()
-                val actual = funParams.size
-
-                if (funParams.size != funExpr.paramsSize())
-                    return Result.failure(EvaluationException(
-                        "Lambda invoked with wrong amount of args. Expected: $expected, got: $actual",
-                        listOf(expr)
-                    ))
-
                 val paramAcc = mutableListOf<Value>()
-                for (param in funList.subList(1, funList.size)) {
+
+                for (param in funParams) {
                     try {
-                        evaluateOrThrow(param, env)
+                        paramAcc.addLast(evaluateOrThrow(param, env))
                     } catch (e: EvaluationException) {
                         return Result.failure(EvaluationException(e.message, e.callStack + expr))
                     } catch (e: Throwable) {
@@ -62,7 +64,14 @@ fun evaluate(expr: Expression, env: Environment): Result<Value> = when (expr) {
                     }
                 }
 
-                funExpr.invoke(*paramAcc.toTypedArray())
+                try {
+                    val x = funExpr.invokeOrThrow(*paramAcc.toTypedArray())
+                    return Result.success(x)
+                } catch (e: EvaluationException) {
+                    return Result.failure(EvaluationException(e.message, e.callStack + expr))
+                } catch (e: Throwable) {
+                    return Result.failure(e)
+                }
             }
 
             is Value.ValMacro -> throw NotImplementedError("Macros are not yet implemented!")
