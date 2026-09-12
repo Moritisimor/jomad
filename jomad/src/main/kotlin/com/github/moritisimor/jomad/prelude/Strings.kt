@@ -7,7 +7,6 @@ import com.github.moritisimor.jomad.expressions.Expression
 import com.github.moritisimor.jomad.values.Environment
 import com.github.moritisimor.jomad.values.Value
 import com.github.moritisimor.jomad.values.newList
-import com.github.moritisimor.jomad.values.newNumber
 import com.github.moritisimor.jomad.values.newString
 
 fun registerStringFunctions(env: Environment) {
@@ -22,14 +21,6 @@ fun registerStringFunctions(env: Environment) {
             tempList.add(Value.ValString(part))
 
         return newList(tempList)
-    })
-
-    env.registerNativeThrowing("strlen", fun(args: List<Expression>, env: Environment): Value {
-        if (args.size != 1)
-            throw EvaluationException("strlen expects 1 argument")
-
-        val str = evaluateToStringOrThrow(args[0], env)
-        return newNumber(str.length.toDouble())
     })
 
     env.registerNativeThrowing("sprint", fun(args: List<Expression>, env: Environment): Value {

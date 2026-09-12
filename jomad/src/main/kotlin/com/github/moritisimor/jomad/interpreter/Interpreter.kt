@@ -16,6 +16,8 @@ import com.github.moritisimor.jomad.prelude.registerStringFunctions
 import com.github.moritisimor.jomad.prelude.registerTypeCheckingFunctions
 import com.github.moritisimor.jomad.prelude.registerTypeConversionFunctions
 import com.github.moritisimor.jomad.prelude.registerVariableFunctions
+import com.github.moritisimor.jomad.srcprelude.registerListFunctionsSrc
+import com.github.moritisimor.jomad.srcprelude.registerStringFunctionsSrc
 import com.github.moritisimor.jomad.values.Environment
 import com.github.moritisimor.jomad.values.Value
 import java.io.File
@@ -38,6 +40,9 @@ class Interpreter {
             registerConditionals(globalEnvironment)
             registerArithmetics(globalEnvironment)
             registerIO(globalEnvironment)
+
+            registerStringFunctionsSrc(this)
+            registerListFunctionsSrc(this)
         }
     }
 
